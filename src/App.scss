@@ -1,5 +1,12 @@
+.App {
+    min-height: 100vh;
+    background-image: url('https://vignette.wikia.nocookie.net/starwarsofthecaribbean/images/3/30/Christophsis.jpg/revision/latest?cb=20130310013513');
+}
 .title {
     text-align: center;
+    font-family: 'Star Jedi', arial;
+    color: #7F2C39;
+    font-size: 4rem;
 }
 
 .people-display-container {
@@ -7,7 +14,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    border: 1px solid red;
     margin: 10px;
+    padding: 10px;
 }
 

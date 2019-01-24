@@ -1,16 +1,18 @@
 .scrolling-container {
-  border: 1px solid;
   height: 30vh;
   width: 100vw;
   overflow: hidden;
+  background: black;
+  padding-right: 10px;
 }
 
 .scrolling-text {
   font-size: 1.9em;
+  color: #D3C381;
   width: 100%;
   margin: 0;
   overflow: hidden;
-  line-height: 25px;
+  line-height: 35px;
   text-align: center;
   /* Starting position */	
   transform: translateY(100%);

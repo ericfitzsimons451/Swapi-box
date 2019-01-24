@@ -15,6 +15,7 @@ class Nav extends Component {
                 <button onClick={this.props.fetchPeople}>People</button>
                 <button>Vehicles</button>
                 <button>Planets</button>
+                <button>Favorites</button>
             </div>
         )
     }
