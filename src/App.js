@@ -1,29 +1,51 @@
 import React, { Component } from 'react';
+import TextScroll from './TextScroll';
 import './App.css';
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      data: null
+      data: null,
+      crawlText: null
     }
   }
 
-  componentDidMount = () => {
-    fetch('https://swapi.co/api/')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({data: data})
-    })
-    .catch(err => console.log(err))
+  fetchFilms = (url) => {
+    const randomNum = Math.ceil(Math.random() * 7)
+    const filmCrawlText = fetch(url + randomNum)
+      .then(response => response.json())
+      .then(film => film.opening_crawl)
+      .catch(err => console.log(err))
+      return filmCrawlText
   }
 
+  componentDidMount() {
+    const url = 'https://swapi.co/api/'
+    fetch(url)
+      .then(response => response.json())
+      .then(starWarsData => this.fetchFilms(starWarsData.films))
+      .then(crawlText => this.setState({ crawlText }))
+}
+
   render() {
-    return (
+    const { crawlText } = this.state
+
+    if (!crawlText) {
+      return (
+        <div className="App">
+          <h1>Swapi Box</h1>
+          <h2>Loading data...</h2>
+        </div>
+      );
+    } else {
+      return(
       <div className="App">
-       <h1>Swapi Box</h1>
+        <h1>Swapi Box</h1>
+        <TextScroll crawlText={crawlText} />
       </div>
-    );
+      )
+    }
   }
 
 }
