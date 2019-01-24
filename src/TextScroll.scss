@@ -1,0 +1,32 @@
+.scrolling-container {
+  border: 1px solid;
+  height: 30vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.scrolling-text {
+  font-size: 1.9em;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  line-height: 25px;
+  text-align: center;
+  /* Starting position */	
+  transform: translateY(100%);
+  /* Apply animation to this element */	
+  animation: scrolling-text 15s linear infinite;
+}
+/* Move it (define the animation) */
+@keyframes scrolling-text {
+  0%   { 
+ 
+  transform: translateY(100%); 		
+  }
+  100% { 
+
+  transform: translateY(-100%); 
+}
+}
+
+

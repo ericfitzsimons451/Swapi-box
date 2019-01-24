@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextScroll from './TextScroll';
 import Nav from './Nav.js'
 import Person from './Person.js'
-import './App.css';
+import './App.scss';
 
 class App extends Component {
   constructor() {
@@ -29,16 +29,15 @@ class App extends Component {
       return filmCrawlText
   }
 
-  fetchPeople = () => {
-    let peoplePromises = []
-    for (var i = 1; i < 10; i++) {
-      const url = `https://swapi.co/api/people/?page=${i}`
-      peoplePromises.push(fetch(url)
-      .then(response => response.json())
-      .then(people => this.setState({ people: people.results })))
-     
-    }
-    Promise.all(peoplePromises)
+  fetchPeople = async () => {
+      const url = 'https://swapi.co/api/people/'
+      try {
+        const response = await fetch(url)
+        const people = await response.json()
+        await this.setState({ people: people.results })
+      } catch (error) {
+        console.log(error)
+      }
   }
 
   render() {
@@ -47,29 +46,31 @@ class App extends Component {
     if (!crawlText) {
       return (
         <div className="App">
-          <h1>Swapi Box</h1>
+          <h1 className="title">Swapi Box</h1>
           <h2>Loading data...</h2>
         </div>
       );
     } else if (people) {
       return(
         <div className="App">
-          <h1>Swapi Box</h1>
-          <Nav fetchPeople={this.fetchPeople} />
           <TextScroll crawlText={crawlText} />
-          {
-            this.state.people.map((person) => {
-              return <Person information={person} />
-            })
-          }
+          <h1 className="title">Swapi Box</h1>
+          <Nav fetchPeople={this.fetchPeople} />
+          <div className="people-display-container">
+            {
+              this.state.people.map((person) => {
+                return <Person information={person} />
+              })
+            }
+          </div>
       </div>
       )
     } else {
       return(
       <div className="App">
-        <h1>Swapi Box</h1>
-        <Nav fetchPeople={this.fetchPeople} />
         <TextScroll crawlText={crawlText} />
+        <h1 className="title">Swapi Box</h1>
+        <Nav fetchPeople={this.fetchPeople} />
       </div>
       )
     } 

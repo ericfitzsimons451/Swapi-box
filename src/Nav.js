@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Nav.scss';
 
 class Nav extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class Nav extends Component {
 
     render() {
         return(
-            <div>
+            <div className="nav-container">
                 <button onClick={this.props.fetchPeople}>People</button>
                 <button>Vehicles</button>
                 <button>Planets</button>

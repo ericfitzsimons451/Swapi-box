@@ -4,7 +4,9 @@ import './TextScroll.scss'
 const TextScroll = (props) => {
     console.log(props)
     return(
-        <h3>{props.crawlText}</h3>
+        <div className='scrolling-container'>
+            <h3 className="scrolling-text">{props.crawlText}</h3>
+        </div>
     )
 }
 
