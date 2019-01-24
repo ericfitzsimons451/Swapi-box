@@ -8,25 +8,33 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
+      title: null,
+      releaseDate: null,
       crawlText: null,
       people: null
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const url = 'https://swapi.co/api/'
-    fetch(url)
-      .then(response => response.json())
-      .then(starWarsData => this.fetchFilms(starWarsData.films))
-      .then(crawlText => this.setState({ crawlText }))
-}
-  fetchFilms = (url) => {
+    const response = await fetch(url)
+    const starWarsData = await response.json()
+    this.fetchFilms(starWarsData.films)
+    await this.setState({ crawlText: starWarsData.crawl })
+  }
+
+  fetchFilms = async (url) => {
     const randomNum = Math.ceil(Math.random() * 7)
-    const filmCrawlText = fetch(url + randomNum)
-      .then(response => response.json())
-      .then(film => film.opening_crawl)
-      .catch(err => console.log(err))
-      return filmCrawlText
+    try {
+      const response = await fetch(url + randomNum)
+      const film = await response.json()
+      const crawl = film.opening_crawl
+      const title = film.title
+      const releaseDate = film.release_date
+      this.setState({ crawlText: crawl, title: title, releaseDate: releaseDate })
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   fetchPeople = async () => {
@@ -41,7 +49,7 @@ class App extends Component {
   }
 
   render() {
-    const { crawlText, people } = this.state
+    const { crawlText, people, title, releaseDate } = this.state
 
     if (!crawlText) {
       return (
@@ -53,7 +61,9 @@ class App extends Component {
     } else if (people) {
       return(
         <div className="App">
-          <TextScroll crawlText={crawlText} />
+          <TextScroll crawlText={crawlText}
+                      title={title}
+                      releaseDate={releaseDate} />
           <h1 className="title">Swapi Box</h1>
           <Nav fetchPeople={this.fetchPeople} />
           <div className="people-display-container">
@@ -68,7 +78,9 @@ class App extends Component {
     } else {
       return(
       <div className="App">
-        <TextScroll crawlText={crawlText} />
+        <TextScroll crawlText={crawlText}
+                      title={title}
+                      releaseDate={releaseDate} />
         <h1 className="title">Swapi Box</h1>
         <Nav fetchPeople={this.fetchPeople} />
       </div>
