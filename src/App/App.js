@@ -11,7 +11,8 @@ class App extends Component {
       title: null,
       releaseDate: null,
       crawlText: null,
-      people: null
+      people: null,
+      // species: null
     }
   }
 
@@ -42,29 +43,39 @@ class App extends Component {
       try {
         const response = await fetch(url)
         const people = await response.json()
-        const updatedPeople = await this.fetchUpdatedPeople(people)
-        await this.setState({ people: updatedPeople })
+        const updatedPeople = await this.fetchPeopleInfo(people)
+        const updatedPeopleData = await this.fetchSpecies(updatedPeople)
+        await this.setState({ people: updatedPeopleData })
       } catch (error) {
         console.log(error)
       }
   }
 
-  fetchUpdatedPeople = async (aliens) => {
-    const updatedAliens = aliens.results.map( async (alien) => {
-      const response = await fetch(alien.homeworld)
+  fetchPeopleInfo = async (people) => {
+    const updatedPeople = people.results.map( async (person) => {
+      const response = await fetch(person.homeworld)
       const foundWorld = await response.json()
       const { name, population } = foundWorld
       return (
-          { ...alien, homeworld: name, population: population }
+          { ...person, homeworld: name, population: population }
         )
     })
-    return await Promise.all(updatedAliens)
+    return await Promise.all(updatedPeople)
   }
 
-
+  fetchSpecies = async (people) => {
+    const updatedSpecies = people.map( async (person) => {
+      const response = await fetch(person.species)
+      const species = await response.json()
+      return (
+        { ...people, species: species.name }
+      )
+    })
+    return await Promise.all(updatedSpecies)
+  }
 
   render() {
-    const { crawlText, people, title, releaseDate } = this.state
+    const { crawlText, people, title, releaseDate, species } = this.state
 
     if (!crawlText) {
       return (
@@ -82,8 +93,9 @@ class App extends Component {
           <Nav fetchPeople={this.fetchPeople} />
           <div className="people-display-container">
             {
-              this.state.people.map((person) => {
-                return <Person information={person} />
+              this.state.people.map((person, i) => {
+                return <Person information={person}
+                               key={i} />
               })
             }
           </div>
