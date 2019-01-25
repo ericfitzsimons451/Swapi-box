@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import TextScroll from './TextScroll';
-import Nav from './Nav.js'
-import Person from './Person.js'
+import TextScroll from '../TextScroll/TextScroll.js';
+import Nav from '../Nav/Nav.js'
+import Person from '../Person/Person.js'
 import './App.scss';
 
 class App extends Component {
@@ -32,7 +32,7 @@ class App extends Component {
       const title = film.title
       const releaseDate = film.release_date
       this.setState({ crawlText: crawl, title: title, releaseDate: releaseDate })
-    } catch(error) {
+    } catch (error) {
       console.log(error)
     }
   }
@@ -42,11 +42,26 @@ class App extends Component {
       try {
         const response = await fetch(url)
         const people = await response.json()
-        await this.setState({ people: people.results })
+        const updatedPeople = await this.fetchUpdatedPeople(people)
+        await this.setState({ people: updatedPeople })
       } catch (error) {
         console.log(error)
       }
   }
+
+  fetchUpdatedPeople = async (aliens) => {
+    const updatedAliens = aliens.results.map( async (alien) => {
+      const response = await fetch(alien.homeworld)
+      const foundWorld = await response.json()
+      const { name, population } = foundWorld
+      return (
+          { ...alien, homeworld: name, population: population }
+        )
+    })
+    return await Promise.all(updatedAliens)
+  }
+
+
 
   render() {
     const { crawlText, people, title, releaseDate } = this.state
@@ -55,7 +70,6 @@ class App extends Component {
       return (
         <div className="App">
           <h1 className="title">Swapi Box</h1>
-          <h2>Loading data...</h2>
         </div>
       );
     } else if (people) {
